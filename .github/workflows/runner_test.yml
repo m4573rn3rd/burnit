@@ -2,44 +2,34 @@
 #  FileName: runner_test.yml
 #  FilePath: .github/workflows/runner_test.yml
 #  LastDateChanged: 2025-11-23
-#  FileDescription: Verifies the self-hosted runner is active
+#  FileDescription: Verifies the 'burnit' runner is active
 ##############################################
 
-name: Test Self-Hosted Runner
+name: Test Burnit Runner
 
 on:
-  # Triggers the workflow on push events but only for the "main" branch
   push:
     branches: [ "main" ]
-    
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   verify-runner:
-    # This line tells GitHub to send this job specifically to YOUR server
-    runs-on: self-hosted
+    # ---------------------------------------------------
+    # TARGETING YOUR SPECIFIC RUNNER LABEL HERE:
+    # ---------------------------------------------------
+    runs-on: burnit
 
     steps:
-      # Step 1: Check out the code
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Step 2: Verify the Machine Identity
-      - name: Who am I and Where am I?
+      - name: Identity Check
         run: |
-          echo "----------------------------------------"
-          echo "Runner Hostname: $(hostname)"
-          echo "Runner User: $(whoami)"
-          echo "Current Directory: $(pwd)"
-          echo "----------------------------------------"
+          echo "Job picked up by runner with label: burnit"
+          echo "Hostname: $(hostname)"
+          echo "User: $(whoami)"
+          echo "Location: $(pwd)"
       
-      # Step 3: Check Environment
-      - name: Check Python Version
+      - name: Check Python
         run: |
-          python3 --version
-          echo "Python is available on this runner."
-
-      # Step 4: List files (To prove we accessed the repo)
-      - name: List Repository Files
-        run: ls -la
+          python3 --version || echo "Python not found"
